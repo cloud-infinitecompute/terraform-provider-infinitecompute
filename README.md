@@ -65,3 +65,7 @@ go build -o ~/.terraform.d/dev/terraform-provider-infinitecompute .
 ```
 
 Try a local build with a `dev_overrides` CLI config pointing at that directory. The client is generated with `oapi-codegen` after `tools/openapi30` rewrites the API's OpenAPI 3.1 document as 3.0.
+
+## Verifying releases
+
+Release checksums are signed with the key in [`SIGNING-KEY.asc`](SIGNING-KEY.asc) (fingerprint `0F3C 1EFB 76CE DC49 51E2  F948 5D6E 0302 E4F8 F159`); Terraform checks it when it installs the provider from the Registry.
