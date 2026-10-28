@@ -629,7 +629,7 @@ type ClientInterface interface {
 
 	// ListAuditEventsAuditEventsGet List Audit Events
 	//
-	// Who changed what in this project, newest first (lab owners' keys only)
+	// Who changed what in this project, newest first (project owners' keys only)
 	//
 	// Corresponds with GET /audit-events (the `ListAuditEventsAuditEventsGet` operationId).
 	ListAuditEventsAuditEventsGet(ctx context.Context, params *ListAuditEventsAuditEventsGetParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -871,7 +871,7 @@ type ClientInterface interface {
 
 // ListAuditEventsAuditEventsGet List Audit Events
 //
-// Who changed what in this project, newest first (lab owners' keys only)
+// Who changed what in this project, newest first (project owners' keys only)
 //
 // Corresponds with GET /audit-events (the `ListAuditEventsAuditEventsGet` operationId).
 func (c *Client) ListAuditEventsAuditEventsGet(ctx context.Context, params *ListAuditEventsAuditEventsGetParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -2703,7 +2703,7 @@ type ClientWithResponsesInterface interface {
 
 	// ListAuditEventsAuditEventsGetWithResponse List Audit Events
 	//
-	// Who changed what in this project, newest first (lab owners' keys only)
+	// Who changed what in this project, newest first (project owners' keys only)
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -4176,7 +4176,7 @@ func (r DetachVolumeVolumesVolumeIdDetachPostResponse) ContentType() string {
 
 // ListAuditEventsAuditEventsGetWithResponse List Audit Events
 //
-// Who changed what in this project, newest first (lab owners' keys only)
+// Who changed what in this project, newest first (project owners' keys only)
 //
 // Returns a wrapper object for the known response body format(s).
 //

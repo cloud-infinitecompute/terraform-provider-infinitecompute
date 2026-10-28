@@ -1207,7 +1207,7 @@
   "paths": {
     "/audit-events": {
       "get": {
-        "description": "Who changed what in this project, newest first (lab owners' keys only)",
+        "description": "Who changed what in this project, newest first (project owners' keys only)",
         "operationId": "list_audit_events_audit_events_get",
         "parameters": [
           {
