@@ -1,0 +1,3001 @@
+{
+  "components": {
+    "schemas": {
+      "AuditActor": {
+        "properties": {
+          "api_key_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The key used, when the call came through the API",
+            "title": "Api Key Prefix"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Their user name at the time",
+            "title": "Name"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Who did it (absent when unknown)",
+            "title": "User Id"
+          }
+        },
+        "title": "AuditActor",
+        "type": "object"
+      },
+      "AuditEvent": {
+        "properties": {
+          "action": {
+            "description": "Our verb, e.g. server.create, volume.attach",
+            "title": "Action",
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/AuditActor"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set when outcome isn't ok",
+            "title": "Error Code"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "outcome": {
+            "description": "\"ok\", \"denied\" or \"error\"",
+            "title": "Outcome",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "string"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AuditResource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ip"
+          },
+          "time": {
+            "format": "date-time",
+            "title": "Time",
+            "type": "string"
+          },
+          "via": {
+            "description": "\"console\" or \"api\"",
+            "title": "Via",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "time",
+          "project_id",
+          "actor",
+          "via",
+          "action",
+          "outcome"
+        ],
+        "title": "AuditEvent",
+        "type": "object"
+      },
+      "AuditEventPage": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/AuditEvent"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Pass as ?cursor= for the next (older) page; absent on the last",
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "AuditEventPage",
+        "type": "object"
+      },
+      "AuditResource": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "e.g. server, volume, api_key",
+            "title": "Type"
+          }
+        },
+        "title": "AuditResource",
+        "type": "object"
+      },
+      "Backup": {
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "data_timestamp": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The point in time the backup holds",
+            "title": "Data Timestamp"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "incremental": {
+            "default": false,
+            "title": "Incremental",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "size_gb": {
+            "title": "Size Gb",
+            "type": "integer"
+          },
+          "status": {
+            "description": "creating, available, restoring, busy, deleting, error",
+            "title": "Status",
+            "type": "string"
+          },
+          "volume_id": {
+            "title": "Volume Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "volume_id",
+          "status",
+          "size_gb"
+        ],
+        "title": "Backup",
+        "type": "object"
+      },
+      "BackupList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Backup"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "BackupList",
+        "type": "object"
+      },
+      "BackupRestore": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Name of the new volume",
+            "title": "Name"
+          }
+        },
+        "title": "BackupRestore",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "description": "Machine-readable error code, e.g. not_found",
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "description": "What went wrong, for people",
+            "title": "Message",
+            "type": "string"
+          },
+          "request_id": {
+            "description": "Quote this when contacting support",
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "description": "\"ok\" when the API is serving",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "description": "API version, v1",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
+      "Image": {
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "gpu_models": {
+            "description": "What the image is built for: GPU models (see server type gpu.model), or none for CPU-only types. An image with an empty list can't be launched",
+            "items": {
+              "type": "string"
+            },
+            "title": "Gpu Models",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "login_user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The default SSH user, e.g. ubuntu",
+            "title": "Login User"
+          },
+          "min_disk_gb": {
+            "default": 0,
+            "title": "Min Disk Gb",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "os_distro": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Os Distro"
+          },
+          "os_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Os Version"
+          },
+          "size_bytes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size Bytes"
+          },
+          "status": {
+            "description": "active when usable",
+            "title": "Status",
+            "type": "string"
+          },
+          "visibility": {
+            "description": "public, or project (your project's own)",
+            "title": "Visibility",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "visibility",
+          "gpu_models"
+        ],
+        "title": "Image",
+        "type": "object"
+      },
+      "ImageList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ImageList",
+        "type": "object"
+      },
+      "Me": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/MeKey"
+          },
+          "project_id": {
+            "description": "The project every call with this key acts in",
+            "title": "Project Id",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/MeUser"
+          }
+        },
+        "required": [
+          "project_id",
+          "user",
+          "key"
+        ],
+        "title": "Me",
+        "type": "object"
+      },
+      "MeKey": {
+        "properties": {
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "id": {
+            "description": "Key id (not secret)",
+            "title": "Id",
+            "type": "string"
+          },
+          "prefix": {
+            "description": "The key's visible prefix, as listed in the console",
+            "title": "Prefix",
+            "type": "string"
+          },
+          "scope": {
+            "description": "\"read\" or \"read-write\"",
+            "title": "Scope",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "prefix",
+          "scope",
+          "expires_at"
+        ],
+        "title": "MeKey",
+        "type": "object"
+      },
+      "MeUser": {
+        "properties": {
+          "id": {
+            "description": "The person who created the key",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Their user name when the key was created",
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "MeUser",
+        "type": "object"
+      },
+      "Price": {
+        "properties": {
+          "amount": {
+            "description": "Decimal string, e.g. 2.50",
+            "title": "Amount",
+            "type": "string"
+          },
+          "currency": {
+            "description": "ISO 4217, e.g. USD",
+            "title": "Currency",
+            "type": "string"
+          },
+          "per": {
+            "default": "hour",
+            "description": "The period the amount is for: hour",
+            "title": "Per",
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "title": "Price",
+        "type": "object"
+      },
+      "Server": {
+        "properties": {
+          "addresses": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ServerAddress"
+            },
+            "title": "Addresses",
+            "type": "array"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "error_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set when status is error",
+            "title": "Error Reason"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "image_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The image the system disk came from",
+            "title": "Image Id"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "server_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The server type's name",
+            "title": "Server Type"
+          },
+          "site": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ssh_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ssh Key"
+          },
+          "status": {
+            "description": "building, active, busy, stopped, parked, deleting, error",
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "volume_ids": {
+            "default": [],
+            "description": "Attached volumes, system disk included",
+            "items": {
+              "type": "string"
+            },
+            "title": "Volume Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status"
+        ],
+        "title": "Server",
+        "type": "object"
+      },
+      "ServerAction": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "description": "start, stop, reboot, park (frees the GPU, stops GPU billing, keeps the disk) or resume (from parked)",
+            "title": "Action",
+            "type": "string"
+          },
+          "hard": {
+            "default": false,
+            "description": "reboot only: a hard reboot (power cycle)",
+            "title": "Hard",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "title": "ServerAction",
+        "type": "object"
+      },
+      "ServerAddress": {
+        "properties": {
+          "ip": {
+            "title": "Ip",
+            "type": "string"
+          },
+          "network": {
+            "title": "Network",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "network",
+          "ip",
+          "version"
+        ],
+        "title": "ServerAddress",
+        "type": "object"
+      },
+      "ServerCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "delete_disk_with_server": {
+            "default": true,
+            "description": "Delete the system disk when the server is deleted",
+            "title": "Delete Disk With Server",
+            "type": "boolean"
+          },
+          "disk_gb": {
+            "anyOf": [
+              {
+                "maximum": 2000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "System disk size; default 50, at least the image's",
+            "title": "Disk Gb"
+          },
+          "image": {
+            "description": "An image id or name built for the type's GPU: its gpu_models include the type's gpu.model, or none for a CPU type (see /images)",
+            "title": "Image",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "server_type": {
+            "description": "A server type's name or id (see /server-types)",
+            "title": "Server Type",
+            "type": "string"
+          },
+          "ssh_key": {
+            "description": "The name of one of your SSH keys (see /ssh-keys)",
+            "title": "Ssh Key",
+            "type": "string"
+          },
+          "user_data": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "cloud-init user data as text (e.g. #cloud-config), at most 48 KiB",
+            "title": "User Data"
+          }
+        },
+        "required": [
+          "name",
+          "server_type",
+          "image",
+          "ssh_key"
+        ],
+        "title": "ServerCreate",
+        "type": "object"
+      },
+      "ServerList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Server"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ServerList",
+        "type": "object"
+      },
+      "ServerType": {
+        "properties": {
+          "gpu": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ServerTypeGpu"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null for a CPU-only type"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Use this as server_type when creating a server",
+            "title": "Name",
+            "type": "string"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Price"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Current list price; null if not priced"
+          },
+          "ram_gb": {
+            "title": "Ram Gb",
+            "type": "number"
+          },
+          "site": {
+            "$ref": "#/components/schemas/Site"
+          },
+          "vcpus": {
+            "title": "Vcpus",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "vcpus",
+          "ram_gb",
+          "site"
+        ],
+        "title": "ServerType",
+        "type": "object"
+      },
+      "ServerTypeGpu": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "model": {
+            "description": "GPU model id, matched by images' gpu_models, e.g. h100",
+            "title": "Model",
+            "type": "string"
+          },
+          "name": {
+            "description": "Display name, e.g. NVIDIA H100 PCIe",
+            "title": "Name",
+            "type": "string"
+          },
+          "vram_gb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Memory per GPU",
+            "title": "Vram Gb"
+          }
+        },
+        "required": [
+          "model",
+          "name",
+          "count"
+        ],
+        "title": "ServerTypeGpu",
+        "type": "object"
+      },
+      "ServerTypeList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ServerType"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ServerTypeList",
+        "type": "object"
+      },
+      "Site": {
+        "properties": {
+          "id": {
+            "description": "Stable site id; GET /server-types lists the ones your project can use",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Display name of the site",
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "Site",
+        "type": "object"
+      },
+      "SshAccess": {
+        "properties": {
+          "command": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Ready-made ssh command line",
+            "title": "Command"
+          },
+          "host": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Connect here when open",
+            "title": "Host"
+          },
+          "port": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Port"
+          },
+          "state": {
+            "description": "open, or closed",
+            "title": "State",
+            "type": "string"
+          },
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The image's login user, e.g. ubuntu",
+            "title": "User"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "title": "SshAccess",
+        "type": "object"
+      },
+      "SshKey": {
+        "properties": {
+          "fingerprint": {
+            "title": "Fingerprint",
+            "type": "string"
+          },
+          "name": {
+            "description": "Use this as ssh_key when creating a server",
+            "title": "Name",
+            "type": "string"
+          },
+          "public_key": {
+            "title": "Public Key",
+            "type": "string"
+          },
+          "type": {
+            "description": "ssh",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "fingerprint",
+          "public_key"
+        ],
+        "title": "SshKey",
+        "type": "object"
+      },
+      "SshKeyCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_. -]+$",
+            "title": "Name",
+            "type": "string"
+          },
+          "public_key": {
+            "description": "OpenSSH format",
+            "maxLength": 16384,
+            "minLength": 16,
+            "title": "Public Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "public_key"
+        ],
+        "title": "SshKeyCreate",
+        "type": "object"
+      },
+      "SshKeyList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/SshKey"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "SshKeyList",
+        "type": "object"
+      },
+      "Usage": {
+        "properties": {
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "month": {
+            "description": "YYYY-MM (UTC)",
+            "title": "Month",
+            "type": "string"
+          },
+          "servers": {
+            "items": {
+              "$ref": "#/components/schemas/UsageServer"
+            },
+            "title": "Servers",
+            "type": "array"
+          },
+          "spend": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageSpend"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Rated charges; null when the project has no billing account"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          },
+          "total_gpu_hours": {
+            "title": "Total Gpu Hours",
+            "type": "number"
+          }
+        },
+        "required": [
+          "month",
+          "start",
+          "end",
+          "generated_at",
+          "total_gpu_hours",
+          "servers"
+        ],
+        "title": "Usage",
+        "type": "object"
+      },
+      "UsageServer": {
+        "properties": {
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "gpu_count": {
+            "title": "Gpu Count",
+            "type": "integer"
+          },
+          "gpu_hours": {
+            "title": "Gpu Hours",
+            "type": "number"
+          },
+          "gpu_model": {
+            "description": "Display name of the GPU",
+            "title": "Gpu Model",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "server_id": {
+            "title": "Server Id",
+            "type": "string"
+          },
+          "server_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Server Type"
+          },
+          "sku": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Billing SKU, e.g. gpu:h100",
+            "title": "Sku"
+          }
+        },
+        "required": [
+          "server_id",
+          "name",
+          "gpu_model",
+          "gpu_count",
+          "gpu_hours",
+          "deleted"
+        ],
+        "title": "UsageServer",
+        "type": "object"
+      },
+      "UsageSpend": {
+        "properties": {
+          "amount": {
+            "description": "Decimal string: this project's rated charges",
+            "title": "Amount",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/UsageSpendLine"
+            },
+            "title": "Lines",
+            "type": "array"
+          },
+          "rated_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Usage after this isn't rated yet",
+            "title": "Rated Until"
+          }
+        },
+        "required": [
+          "currency",
+          "amount",
+          "lines"
+        ],
+        "title": "UsageSpend",
+        "type": "object"
+      },
+      "UsageSpendLine": {
+        "properties": {
+          "amount": {
+            "description": "Decimal string, in currency",
+            "title": "Amount",
+            "type": "string"
+          },
+          "quantity": {
+            "description": "Decimal string",
+            "title": "Quantity",
+            "type": "string"
+          },
+          "sku": {
+            "title": "Sku",
+            "type": "string"
+          },
+          "unit": {
+            "description": "e.g. gpu_hour",
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sku",
+          "unit",
+          "quantity",
+          "amount"
+        ],
+        "title": "UsageSpendLine",
+        "type": "object"
+      },
+      "Volume": {
+        "properties": {
+          "attached_to": {
+            "default": [],
+            "description": "Server ids",
+            "items": {
+              "type": "string"
+            },
+            "title": "Attached To",
+            "type": "array"
+          },
+          "bootable": {
+            "default": false,
+            "title": "Bootable",
+            "type": "boolean"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "image_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set when created from an image",
+            "title": "Image Id"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "site": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Site"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "size_gb": {
+            "title": "Size Gb",
+            "type": "integer"
+          },
+          "status": {
+            "description": "creating, available, in_use, busy, deleting, error",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "size_gb",
+          "status"
+        ],
+        "title": "Volume",
+        "type": "object"
+      },
+      "VolumeAttach": {
+        "additionalProperties": false,
+        "properties": {
+          "server_id": {
+            "maxLength": 64,
+            "title": "Server Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "server_id"
+        ],
+        "title": "VolumeAttach",
+        "type": "object"
+      },
+      "VolumeCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "site": {
+            "description": "Site id (see GET /server-types); attach only to servers there",
+            "title": "Site",
+            "type": "string"
+          },
+          "size_gb": {
+            "maximum": 2000.0,
+            "minimum": 1.0,
+            "title": "Size Gb",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "size_gb",
+          "site"
+        ],
+        "title": "VolumeCreate",
+        "type": "object"
+      },
+      "VolumeList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Volume"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "VolumeList",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "description": "An API key from the console: Authorization: Bearer ic_ck_...",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Programmatic access to Infinite Compute GPU servers, volumes and usage.",
+    "title": "Infinite Compute API",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/audit-events": {
+      "get": {
+        "description": "Who changed what in this project, newest first (lab owners' keys only)",
+        "operationId": "list_audit_events_audit_events_get",
+        "parameters": [
+          {
+            "description": "Only this user id's actions",
+            "in": "query",
+            "name": "person",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only this user id's actions",
+              "title": "Person"
+            }
+          },
+          {
+            "description": "An action (\"server.create\") or a resource (\"server\")",
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "An action (\"server.create\") or a resource (\"server\")",
+              "title": "Action"
+            }
+          },
+          {
+            "description": "RFC 3339, inclusive",
+            "in": "query",
+            "name": "since",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "RFC 3339, inclusive",
+              "title": "Since"
+            }
+          },
+          {
+            "description": "RFC 3339, exclusive",
+            "in": "query",
+            "name": "until",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "RFC 3339, exclusive",
+              "title": "Until"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEventPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Audit Events",
+        "tags": [
+          "Audit"
+        ]
+      }
+    },
+    "/backups/{backup_id}/restore": {
+      "post": {
+        "description": "Restore a backup into a new volume on the backup's site",
+        "operationId": "restore_backup_backups__backup_id__restore_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "backup_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Backup Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Any unique string, kept 24 hours",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Any unique string, kept 24 hours",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackupRestore",
+                "default": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Volume"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Restore Backup",
+        "tags": [
+          "Volumes"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Is the API serving",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/images": {
+      "get": {
+        "description": "Images this project can launch from: public ones and its own, by name",
+        "operationId": "list_images_images_get",
+        "parameters": [
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Items per page",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "next_cursor from the previous page",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "next_cursor from the previous page",
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Images",
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/me": {
+      "get": {
+        "description": "The project, person and key behind this key",
+        "operationId": "me_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Me",
+        "tags": [
+          "Keys"
+        ]
+      }
+    },
+    "/server-types": {
+      "get": {
+        "description": "Server types this project can launch, by name",
+        "operationId": "list_server_types_server_types_get",
+        "parameters": [
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Items per page",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "next_cursor from the previous page",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "next_cursor from the previous page",
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerTypeList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Server Types",
+        "tags": [
+          "Catalog"
+        ]
+      }
+    },
+    "/servers": {
+      "get": {
+        "description": "The project's servers, newest first",
+        "operationId": "list_servers_servers_get",
+        "parameters": [
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Items per page",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "next_cursor from the previous page",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "next_cursor from the previous page",
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Servers",
+        "tags": [
+          "Servers"
+        ]
+      },
+      "post": {
+        "description": "Launch a server. Send an Idempotency-Key header so retries are safe",
+        "operationId": "create_server_servers_post",
+        "parameters": [
+          {
+            "description": "Any unique string, kept 24 hours",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Any unique string, kept 24 hours",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServerCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Server"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Create Server",
+        "tags": [
+          "Servers"
+        ]
+      }
+    },
+    "/servers/{server_id}": {
+      "delete": {
+        "description": "Delete a server. Its system disk goes with it unless it was kept at launch",
+        "operationId": "delete_server_servers__server_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "server_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Server Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Server"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Delete Server",
+        "tags": [
+          "Servers"
+        ]
+      },
+      "get": {
+        "description": "One server",
+        "operationId": "get_server_servers__server_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "server_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Server Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Server"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Get Server",
+        "tags": [
+          "Servers"
+        ]
+      }
+    },
+    "/servers/{server_id}/actions": {
+      "post": {
+        "description": "start, stop, reboot, park or resume a server",
+        "operationId": "server_action_servers__server_id__actions_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "server_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Server Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServerAction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Server"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Server Action",
+        "tags": [
+          "Servers"
+        ]
+      }
+    },
+    "/servers/{server_id}/ssh": {
+      "delete": {
+        "description": "Close SSH access to the server",
+        "operationId": "close_ssh_servers__server_id__ssh_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "server_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Server Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SshAccess"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Close Ssh",
+        "tags": [
+          "Servers"
+        ]
+      },
+      "get": {
+        "description": "The server's SSH access",
+        "operationId": "get_ssh_servers__server_id__ssh_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "server_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Server Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SshAccess"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Get Ssh",
+        "tags": [
+          "Servers"
+        ]
+      },
+      "put": {
+        "description": "Open SSH access to the server (the same port every time)",
+        "operationId": "open_ssh_servers__server_id__ssh_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "server_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Server Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SshAccess"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Open Ssh",
+        "tags": [
+          "Servers"
+        ]
+      }
+    },
+    "/ssh-keys": {
+      "get": {
+        "description": "Your SSH keys (key pairs belong to a person), by name",
+        "operationId": "list_ssh_keys_ssh_keys_get",
+        "parameters": [
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Items per page",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "next_cursor from the previous page",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "next_cursor from the previous page",
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SshKeyList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Ssh Keys",
+        "tags": [
+          "Servers"
+        ]
+      },
+      "post": {
+        "description": "Add one of your SSH public keys (OpenSSH format); no private keys are made",
+        "operationId": "create_ssh_key_ssh_keys_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SshKeyCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SshKey"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Create Ssh Key",
+        "tags": [
+          "Servers"
+        ]
+      }
+    },
+    "/ssh-keys/{name}": {
+      "delete": {
+        "description": "Remove one of your SSH keys (servers made with it keep it)",
+        "operationId": "delete_ssh_key_ssh_keys__name__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Name",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Delete Ssh Key",
+        "tags": [
+          "Servers"
+        ]
+      }
+    },
+    "/usage": {
+      "get": {
+        "description": "GPU-hours per server and rated charges for a UTC month",
+        "operationId": "get_usage_usage_get",
+        "parameters": [
+          {
+            "description": "YYYY-MM (UTC); default this month",
+            "in": "query",
+            "name": "month",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "YYYY-MM (UTC); default this month",
+              "title": "Month"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Get Usage",
+        "tags": [
+          "Usage"
+        ]
+      }
+    },
+    "/volumes": {
+      "get": {
+        "description": "The project's volumes, newest first",
+        "operationId": "list_volumes_volumes_get",
+        "parameters": [
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Items per page",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "next_cursor from the previous page",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "next_cursor from the previous page",
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VolumeList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Volumes",
+        "tags": [
+          "Volumes"
+        ]
+      },
+      "post": {
+        "description": "Create an empty volume at a site. Send an Idempotency-Key for safe retries",
+        "operationId": "create_volume_volumes_post",
+        "parameters": [
+          {
+            "description": "Any unique string, kept 24 hours",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Any unique string, kept 24 hours",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolumeCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Volume"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Create Volume",
+        "tags": [
+          "Volumes"
+        ]
+      }
+    },
+    "/volumes/{volume_id}": {
+      "delete": {
+        "description": "Delete a volume (detach it first)",
+        "operationId": "delete_volume_volumes__volume_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "volume_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Volume Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Volume"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Delete Volume",
+        "tags": [
+          "Volumes"
+        ]
+      },
+      "get": {
+        "description": "One volume",
+        "operationId": "get_volume_volumes__volume_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "volume_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Volume Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Volume"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Get Volume",
+        "tags": [
+          "Volumes"
+        ]
+      }
+    },
+    "/volumes/{volume_id}/attach": {
+      "post": {
+        "description": "Attach a volume to a server at the same site",
+        "operationId": "attach_volume_volumes__volume_id__attach_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "volume_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Volume Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolumeAttach"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Volume"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Attach Volume",
+        "tags": [
+          "Volumes"
+        ]
+      }
+    },
+    "/volumes/{volume_id}/backups": {
+      "get": {
+        "description": "Backups the project took of this volume, newest first",
+        "operationId": "list_backups_volumes__volume_id__backups_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "volume_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Volume Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "Items per page",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "next_cursor from the previous page",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "next_cursor from the previous page",
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List Backups",
+        "tags": [
+          "Volumes"
+        ]
+      }
+    },
+    "/volumes/{volume_id}/detach": {
+      "post": {
+        "description": "Detach a volume from its server (not a server's system disk)",
+        "operationId": "detach_volume_volumes__volume_id__detach_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "volume_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "title": "Volume Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Volume"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Detach Volume",
+        "tags": [
+          "Volumes"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/public/v1"
+    }
+  ]
+}

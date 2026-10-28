@@ -1,0 +1,8 @@
+/terraform-provider-infinitecompute
+*.tfstate*
+.terraform/
+.terraform.lock.hcl
+dist/
+.ruff_cache/
+.pytest_cache/
+__pycache__/

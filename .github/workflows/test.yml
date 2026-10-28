@@ -1,0 +1,26 @@
+name: Test
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - name: Generated client matches the contract
+        run: |
+          go generate ./...
+          git diff --exit-code -- internal/client
+      - run: go vet ./...
+      - name: Unit tests (Terraform against an in-memory fake API)
+        run: go test ./... -count=1
